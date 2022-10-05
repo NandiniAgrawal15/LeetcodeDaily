@@ -1,0 +1,69 @@
+class Solution
+{
+    public:
+        void addNode(TreeNode *root, int val, int depth)
+        {
+            if (!root)
+            {
+                return;
+            }
+            if (depth == 1)
+            {
+                TreeNode *l1 = new TreeNode(val);
+                TreeNode *r1 = new TreeNode(val);
+                l1->left = root->left;
+                r1->right = root->right;
+                root->left = l1;
+                root->right = r1;
+                return;
+            }
+            addNode(root->left, val, depth - 1);
+            addNode(root->right, val, depth - 1);
+        }
+    void addNodeQueue(TreeNode *root, int val, int depth)
+    {
+        queue<pair<TreeNode*, int>> q;
+        q.push({ root,
+            1 });
+        while (!q.empty())
+        {
+            TreeNode *curr = q.front().first;
+            int d = q.front().second;
+            q.pop();
+            if (d == depth - 1)
+            {
+                TreeNode *currLeft = new TreeNode(val);
+                TreeNode *currRight = new TreeNode(val);
+                currLeft->left = curr->left;
+                currRight->right = curr->right;
+                curr->left = currLeft;
+                curr->right = currRight;
+            }
+            else
+            {
+                if (curr->left)
+                {
+                    q.push({ curr->left,
+                        d + 1 });
+                }
+                if (curr->right)
+                {
+                    q.push({ curr->right,
+                        d + 1 });
+                }
+            }
+        }
+        return;
+    }
+    TreeNode* addOneRow(TreeNode *root, int val, int depth)
+    {
+        if (depth == 1)
+        {
+            TreeNode *r1 = new TreeNode(val);
+            r1->left = root;
+            return r1;
+        }
+        addNodeQueue(root, val, depth);
+        return root;
+    }
+};
